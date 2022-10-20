@@ -1,0 +1,51 @@
+Scripts:
+sqlCMD.py
+
+login
+    while(loginNotFinished){
+        Prompt("login or sign up")
+        if(signup) {
+            uId = signup()  // includes all stdin and uId & password
+            isArtist=false;
+            return (uId, isArtist)
+        } else {
+            (uId, isArtist) = signin() // includes all stdin and uId & password verification
+            return (uId, isArtist)
+        }
+    }
+
+user
+    while(notExit) {
+        Prompt("list of activities")
+
+        match
+            "Start a session"
+                startsession()
+            "Search for songs and playlists"
+                searchSong()    // Uses songActions()
+            "Search for artists"
+                searchArtis()   // Uses songActions()
+            "End the session"
+                notExit=false;
+    }
+
+artist
+    while(notExit) {
+        Prompt("list of activities")
+
+        match
+            "Add a song"
+                func1()
+            "Find top fans and playlists"
+                func2()
+    }
+
+Sudo code main:
+
+(uId, isArtist)= login();
+
+if(isArtist) {
+    artist(uId)
+} else {
+    user(uId)
+}
