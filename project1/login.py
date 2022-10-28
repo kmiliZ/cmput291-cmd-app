@@ -73,13 +73,13 @@ def inValidID():
             isValidId = checkValidUidDB(id) or checkValidAidDB(id)
             if (isValidId):
                 if (checkValidUidDB(id) and checkValidAidDB(id)):
-                    return "3"
+                    return "3", id
                 elif (checkValidUidDB(id)):
-                    return "1"
+                    return "1", id
                 elif (checkValidAidDB(id)):
-                    return "2"
+                    return "2", id
         elif (loginAs == "2"):
-            return 0
+            return 0, 0
 
 
 def getUserLogInInfo():
@@ -91,13 +91,14 @@ def getUserLogInInfo():
     if (isValidAid and isValidUid):
         userType = pickLogin()
     elif (not isValidAid and not isValidUid):
-        result = inValidID()
+        result, id = inValidID()
         if (not result):
             return register()
         elif (result == "3"):
             userType = pickLogin()
         else:
             userType = result
+        userId = id
     elif (isValidAid):
         userType = "2"
     elif (isValidUid):
