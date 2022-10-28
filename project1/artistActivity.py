@@ -16,6 +16,7 @@ def artistMenu():
 
 
 def artistAction(aid):
+    # this function control the whole flow of what a artist user can do
     artistMenu()
     while True:
         userAction = input()
@@ -35,6 +36,10 @@ def artistAction(aid):
 
 
 def addPerformanceInfo(sid, userId):
+    '''
+    This function will insert all the artiests's aid
+    who worked on the song to the perform table
+    '''
     sql_commands.insertPerform(userId, sid)
     collabNum = input(
         "including you, how many artists in total worked on this song?\n")
