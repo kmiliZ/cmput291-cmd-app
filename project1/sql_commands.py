@@ -13,6 +13,8 @@ def connect(path):
     connection.commit()
     return
 
+# for log in
+
 
 def insertUserDB(id, name, pwd):
     global connection, cursor
@@ -58,6 +60,8 @@ def checkValidArtistPasswordDB(aid, pwd):
         return False
     return True
 
+# for artist activity
+
 
 def isNewSong(title, duration):
     cursor.execute(
@@ -88,6 +92,36 @@ def insertPerform(aid, sid):
     cursor.execute(''' insert into perform values(?,?)''',
                    (aid, sid))
     connection.commit()
+
+# top 3 users who listen to artist's songs the longest time
+
+
+def findTopFans(aid):
+    statement = '''select users.uid,users.name from users
+   join listen on listen.uid = users.uid
+   join songs on songs.sid = listen.sid
+   join perform on perform.sid = songs.sid
+   where perform.aid ='{}'
+   group by users.uid,users.name
+   order by sum(songs.duration * listen.cnt) DESC
+   limit 3'''
+    cursor.execute(statement.format(aid))
+    allFans = cursor.fetchall()
+    return allFans
+
+# top 3 playlists that include the largest number of their songs
+
+
+def findTopPlaylists(aid):
+    statement = '''select pl.pid from plinclude pl join
+    perform p on pl.sid = p.sid
+    where p.aid = '{}'
+    group by pl.pid
+    order by count(pl.sid) DESC
+    limit 3'''
+    cursor.execute(statement.format(aid))
+    allTopPlayLists = cursor.fetchall()
+    return allTopPlayLists
 
 
 def close():

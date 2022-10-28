@@ -1,3 +1,4 @@
+from itertools import count
 import login
 import sql_commands
 
@@ -22,7 +23,7 @@ def artistAction(aid):
             addSongAction(aid)
             artistMenu()
         elif (userAction == "2"):
-            findAction()
+            findAction(aid)
             artistMenu()
         elif (userAction == "3"):
             return 1
@@ -63,5 +64,16 @@ def addSongAction(userId):
         print("FAIL TO ADD SONG: This song was already added before!")
 
 
-def findAction():
-    print("ad")
+def findAction(aid):
+    pl = sql_commands.findTopPlaylists(aid)
+    countPl = 1
+    countF = 1
+    print("top 3 playlists that include the largest number of your songs ")
+    for each in pl:
+        print(countPl, ": ", each[0])
+        countPl = countPl+1
+    fans = sql_commands.findTopFans(aid)
+    print("top 3 users who listen to your songs the longest time")
+    for each in fans:
+        print(countF, ": ", each[0], " ", each[1])
+        countF = countF + 1
