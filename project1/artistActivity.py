@@ -31,7 +31,7 @@ def artistAction(aid):
         elif (userAction == "4"):
             return 0
         else:
-            print("please choose from 1,2 or 3")
+            print("please choose from 1,2, 3 or 4")
     return
 
 
@@ -60,7 +60,7 @@ def addSongAction(userId):
     print("please provide song title and duration")
     sTitle = input("enter song title:")
     sDuration = input("enter song duration:")
-    if (sql_commands.isNewSong(sTitle, sDuration)):
+    if (sql_commands.isNewSong(sTitle, sDuration, userId)):
         sId = sql_commands.getTheLastSid()+1
         sql_commands.insertNewSong(sId, sTitle, sDuration)
         addPerformanceInfo(sId, userId)
@@ -75,7 +75,7 @@ def findAction(aid):
     countF = 1
     print("top 3 playlists that include the largest number of your songs ")
     for each in pl:
-        print(countPl, ": ", each[0])
+        print(countPl, ": ", each[0], " ", each[1])
         countPl = countPl+1
     fans = sql_commands.findTopFans(aid)
     print("top 3 users who listen to your songs the longest time")

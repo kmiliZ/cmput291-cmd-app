@@ -63,9 +63,9 @@ def checkValidArtistPasswordDB(aid, pwd):
 # for artist activity
 
 
-def isNewSong(title, duration):
+def isNewSong(title, duration, aid):
     cursor.execute(
-        "select * from songs where title like '{}' and duration={}".format(title, duration))
+        "select * from songs join perform on songs.sid=perform.sid where songs.title like '{}' and songs.duration={} and perform.aid={}".format(title, duration, aid))
     result = cursor.fetchone()
     if result == None:
         return True
@@ -113,10 +113,11 @@ def findTopFans(aid):
 
 
 def findTopPlaylists(aid):
-    statement = '''select pl.pid from plinclude pl join
+    statement = '''select pl.pid,playlists.title from plinclude pl join
     perform p on pl.sid = p.sid
+    join playlists on playlists.pid = pl.pid
     where p.aid = '{}'
-    group by pl.pid
+    group by pl.pid,playlists.title
     order by count(pl.sid) DESC
     limit 3'''
     cursor.execute(statement.format(aid))
