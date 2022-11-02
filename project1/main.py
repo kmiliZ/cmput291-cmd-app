@@ -19,7 +19,7 @@ def main():
             # returns true if user chose to log out
             isReturningtoMainMenu = artistActivity.artistAction(userId)
         else:
-            isReturningtoMainMenu = userActivity.userMenu(userId)
+            isReturningtoMainMenu = userActivity.userActivity(userId)
         if (not isReturningtoMainMenu):
             break
 
