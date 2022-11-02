@@ -19,7 +19,7 @@ def artistAction(aid):
     # this function control the whole flow of what a artist user can do
     artistMenu()
     while True:
-        userAction = input()
+        userAction = input(">")
         if (userAction == "1"):
             addSongAction(aid)
             artistMenu()
@@ -41,13 +41,21 @@ def addPerformanceInfo(sid, userId):
     who worked on the song to the perform table
     '''
     sql_commands.insertPerform(userId, sid)
-    collabNum = input(
-        "including you, how many artists in total worked on this song?\n")
-    print("please enter the id of collabrator artists, one by one")
-    for i in range(int(collabNum)-1):
+    print("including you, how many artists in total worked on this song?")
+    while True:
+        try:
+            collabNum = input(">")
+            collabInt = int(collabNum)
+            break
+        except ValueError:
+            print("please enter an integer")
+
+    if (collabInt > 1):
+        print("please enter the id of collabrator artists, one by one")
+    for i in range(collabInt-1):
         while True:
-            collabArtistId = input(
-                "enter id, presse return/enter to enter the next id:")
+            print("enter id, presse return/enter to enter the next id:")
+            collabArtistId = input(">")
             if (sql_commands.checkValidAidDB(collabArtistId)):
                 sql_commands.insertPerform(collabArtistId, sid)
                 break

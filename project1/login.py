@@ -54,7 +54,7 @@ def pickLogin():
         2.Artist
     '''
     print(logInChoiceLine)
-    loginAs = input()
+    loginAs = input(">")
     while (loginAs != "1" and loginAs != "2"):
         loginAs = input("wrong input: please choose from 1 or 2\n")
     return loginAs
@@ -123,7 +123,7 @@ def login():
         '''
 
         print(welcome)
-        userChoice = input()
+        userChoice = input(">")
         isExiting = False
 
         while (userChoice != "1" and userChoice != "2" and userChoice != "3"):

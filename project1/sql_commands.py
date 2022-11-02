@@ -44,7 +44,6 @@ def checkValidUserPasswordDB(uid, pwd):
     global connection, cursor
     cursor.execute(
         "select * from users where users.uid='{}' and users.pwd='{}'".format(uid, pwd))
-    print("pwd is", pwd)
     result = cursor.fetchone()
     if result == None:
         return False
@@ -126,21 +125,30 @@ def findTopPlaylists(aid):
 
 # for user activity
 
+
 def findMaxSno(uid):
-    cursor.execute('''select MAX(sno) from sessions where sessions.uid=?''', [uid])
+    cursor.execute(
+        '''select MAX(sno) from sessions where sessions.uid=?''', [uid])
     return cursor.fetchone()
+
 
 def startSession(uid, sno):
-    cursor.execute('''insert into sessions values(?,?,DateTime('now'),null)''', (uid, sno))
-    connection.commit()
-    
-def endSession(uid, sno):
-    cursor.execute('''update sessions set end=DateTime('now') where uid=? and sno=?''', (uid, sno))
+    cursor.execute(
+        '''insert into sessions values(?,?,DateTime('now'),null)''', (uid, sno))
     connection.commit()
 
+
+def endSession(uid, sno):
+    cursor.execute(
+        '''update sessions set end=DateTime('now') where uid=? and sno=?''', (uid, sno))
+    connection.commit()
+
+
 def getSongById(sid):
-    cursor.execute('''select sid, title, duration from songs where sid=?''', [sid])
+    cursor.execute(
+        '''select sid, title, duration from songs where sid=?''', [sid])
     return cursor.fetchone()
+
 
 def getArtistById(aid):
     cursor.execute('''
@@ -152,6 +160,7 @@ def getArtistById(aid):
                    ''', [aid])
     return cursor.fetchone()
 
+
 def getArtistSongsById(aid):
     cursor.execute('''select sid from perform where aid=?''', [aid])
     results = cursor.fetchall()
@@ -161,49 +170,63 @@ def getArtistSongsById(aid):
         tList.append((0, "Song", song))
     return tList
 
+
 def getSondPerformerById(sid):
-    cursor.execute('''select a.name from artists a, perform p where p.sid=? and p.aid=a.aid''', [sid])
+    cursor.execute(
+        '''select a.name from artists a, perform p where p.sid=? and p.aid=a.aid''', [sid])
     return cursor.fetchall()
 
 # returns a list of all playlists the song is in (including other users' playlist)
+
+
 def getSongPLsById(sid):
-    cursor.execute('''select p.title from playlists p, plinclude pl where pl.sid=? and p.pid=pl.pid''', [sid])
+    cursor.execute(
+        '''select p.title from playlists p, plinclude pl where pl.sid=? and p.pid=pl.pid''', [sid])
     return cursor.fetchall()
+
 
 def getUserPLsById(uid):
     cursor.execute('''select pid, title from playlists where uid=?''', [uid])
     return cursor.fetchall()
 
+
 def getMaxPLSorder(pid):
     cursor.execute('''select MAX(sorder) from plinclude where pid=?''', [pid])
     return cursor.fetchone()
 
+
 def addSongToPLById(sid, pid):
     sorder = None
     result = getMaxPLSorder(pid)
-    if(result[0] == None):
+    if (result[0] == None):
         sorder = 0
     else:
         sorder = int(result[0]) + 1
-    cursor.execute('''insert into plinclude values(?,?,?)''', (pid, sid, sorder))
+    cursor.execute('''insert into plinclude values(?,?,?)''',
+                   (pid, sid, sorder))
     connection.commit()
-    
+
+
 def getMaxPId():
     cursor.execute('''select MAX(pid) from playlists''')
     return cursor.fetchone()
 
+
 def addNewPL(uid, title):
     pId = None
     result = getMaxPId()
-    if(result[0] == None):
+    if (result[0] == None):
         pId = 0
     else:
         pId = int(result[0]) + 1
-    cursor.execute('''insert into playlists values(?,?,?)''', (pId, title, uid))
+    cursor.execute('''insert into playlists values(?,?,?)''',
+                   (pId, title, uid))
     connection.commit()
     return pId
-    
+
 # returns true if the song is already in session
+
+
 def checkSongInSession(uid, sno, sid):
     cursor.execute('''
                    select l.cnt 
@@ -211,23 +234,26 @@ def checkSongInSession(uid, sno, sid):
                    where l.uid=? and l.sno=? and l.sid=?
                    ''', (uid, sno, sid))
     result = cursor.fetchone()
-    if(result == None):
+    if (result == None):
         return False
     else:
         return True
-    
+
+
 def listenById(uid, sno, sid):
-    if(checkSongInSession(uid, sno, sid)):
+    if (checkSongInSession(uid, sno, sid)):
         cursor.execute('''
                        update listen 
                        set cnt=cnt+1 
                        where uid=? and sno=? and sid=?
                        ''', (uid, sno, sid))
-        
+
     else:
-        cursor.execute('''insert into listen values(?,?,?,1)''', (uid, sno, sid))
+        cursor.execute('''insert into listen values(?,?,?,1)''',
+                       (uid, sno, sid))
     connection.commit()
-    
+
+
 def getPlaylistById(pid):
     statement = '''
     select p.pid, p.title, sum(s.duration)
@@ -239,6 +265,7 @@ def getPlaylistById(pid):
     '''
     cursor.execute(statement, [pid])
     return cursor.fetchone()
+
 
 def getSongsFromPLById(pid):
     cursor.execute('''
@@ -254,34 +281,37 @@ def getSongsFromPLById(pid):
 # https://www.sqlitetutorial.net/sqlite-like/
 # https://stackoverflow.com/questions/1602934/check-if-a-given-key-already-exists-in-a-dictionary
 # returns a list tuples (#of matches, Song/Playlist, return from sql)
+
+
 def searchSandP(list):
     songDict = {}
     playlistDict = {}
     for i in list:
         pattern = "%" + i + "%"
-        cursor.execute('''select sid from songs where title like ?''', [pattern])
+        cursor.execute(
+            '''select sid from songs where title like ?''', [pattern])
         results1 = cursor.fetchall()
         for j in results1:
             myId = j[0]
             songDict[myId] = songDict.get(myId, 0) + 1
-            
-        cursor.execute('''select pid from playlists where title like ?''', [pattern])
+
+        cursor.execute(
+            '''select pid from playlists where title like ?''', [pattern])
         results2 = cursor.fetchall()
         for k in results2:
             myId = k[0]
             playlistDict[myId] = playlistDict.get(myId, 0) + 1
-            
+
     tList = []
     for x, y in songDict.items():
         song = getSongById(x)
         tList.append((y, "Song", song))
-        
+
     for x, y in playlistDict.items():
         playlist = getPlaylistById(x)
         tList.append((y, "PlayList", playlist))
-    
-    return tList
 
+    return tList
 
 
 def searchA(list):
@@ -299,15 +329,15 @@ def searchA(list):
         for j in results1:
             myId = j[0]
             artistDict[myId] = artistDict.get(myId, 0) + 1
-            
+
     tList = []
     for x, y in artistDict.items():
         song = getArtistById(x)
         tList.append((y, "Artist", song))
-    
+
     return tList
-    
-    
+
+
 def close():
     connection.commit()
     connection.close()
