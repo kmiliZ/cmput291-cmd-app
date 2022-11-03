@@ -15,14 +15,14 @@ def verifyPassWord(loginType, uid, pwd):
     if (loginType == "1"):
         while (not checkValidUserPasswordDB(uid, pwd)):
             print(
-                "Password incorrect. Please try again, or type exit to return to main menu:")
+                "Password incorrect. Please try again, or type exit to return to main menu: ")
             pwd = input()
             if (pwd == "exit"):
                 return 0
     elif (loginType == "2"):
         while (not checkValidArtistPasswordDB(uid, pwd)):
             print(
-                "Password incorrect. Please try again, or type exit to return to main menu:")
+                "Password incorrect. Please try again, or type exit to return to main menu: ")
             pwd = input()
             if (pwd == "exit"):
                 return 0
@@ -32,15 +32,15 @@ def verifyPassWord(loginType, uid, pwd):
 def register():
     clear()
     print("registering new user account")
-    userId = input("please enter a unique id:")
+    userId = input("please enter a unique id: ")
     while (checkValidUidDB(userId)):
         print("This id is already taken.")
         userId = input(
             'Please try a different one, or type exit to return to main menu\n')
         if (userId == "exit"):
             return userId, "not registered"
-    userName = input("please enter a user name:")
-    userPwd = input("please enter a password:")
+    userName = input("please enter a user name: ")
+    userPwd = input("please enter a password: ")
     insertUserDB(userId, userName, userPwd)
     print("successfully registered!")
     return userId, "1"
@@ -69,7 +69,7 @@ def inValidID():
         while (loginAs != "1" and loginAs != "2"):
             loginAs = input("wrong input: please choose from 1 or 2\n")
         if (loginAs == "1"):
-            id = input("please enter your ID again:\n")
+            id = input("please enter your ID again: ")
             isValidId = checkValidUidDB(id) or checkValidAidDB(id)
             if (isValidId):
                 if (checkValidUidDB(id) and checkValidAidDB(id)):
@@ -85,7 +85,7 @@ def inValidID():
 def getUserLogInInfo():
     clear()
     print("log in")
-    userId = input("please enter your user id:")
+    userId = input("please enter your user id: ")
     isValidAid = checkValidAidDB(userId)
     isValidUid = checkValidUidDB(userId)
     if (isValidAid and isValidUid):
@@ -103,7 +103,7 @@ def getUserLogInInfo():
         userType = "2"
     elif (isValidUid):
         userType = "1"
-    userPwd = input("please enter your password:")
+    userPwd = input("please enter your password: ")
     isVerified = verifyPassWord(userType, userId, userPwd)
     if (isVerified):
         print("SUCCESS ON LOGIN!")
