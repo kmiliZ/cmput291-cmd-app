@@ -53,16 +53,19 @@ def addPerformanceInfo(sid, userId):
     if (collabInt > 1):
         print("please enter the id of collabrator artists other than you, one by one")
     collabs = []
+    collabs.append(userId)
     for i in range(collabInt-1):
         while True:
             print("enter id, presse return/enter to enter the next id:")
             collabArtistId = input(">")
             if (collabArtistId == "exit"):
-                break
+                return 0
             if (collabArtistId == userId):
                 print("Please enter artists id other than you")
-            if (collabs.contains(collabArtistId)):
+                continue
+            if (collabArtistId in collabs):
                 print("you have already entered this artist id before")
+                continue
             if (sql_commands.checkValidAidDB(collabArtistId)):
                 sql_commands.insertPerform(collabArtistId, sid)
                 collabs.append(collabArtistId)

@@ -64,7 +64,7 @@ def checkValidArtistPasswordDB(aid, pwd):
 
 def isNewSong(title, duration, aid):
     cursor.execute(
-        "select * from songs join perform on songs.sid=perform.sid where songs.title like '{}' and songs.duration={} and perform.aid={}".format(title, duration, aid))
+        "select * from songs join perform on songs.sid=perform.sid where songs.title like ? and songs.duration=? and perform.aid=?", (title, duration, aid))
     result = cursor.fetchone()
     if result == None:
         return True
