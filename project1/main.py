@@ -7,8 +7,7 @@ import userActivity
 
 def main():
 
-    path = "./prj-test.db"  # this should not be hard coded
-    # path = input("please enter db path:")
+    path = input("please enter db path:")
     sql_commands.connect(path)
     while True:
         userId, isArtiest, isExiting = login.login()
